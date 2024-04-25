@@ -1,9 +1,6 @@
 using MinimalApiProj;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -24,7 +21,31 @@ StudentOps.Init();
 app.MapGet("/students", () =>
 {
     return StudentOps.students;
-}).WithName("Students").WithOpenApi();
+}).WithName("studentsGet").WithOpenApi();
+
+app.MapGet("/rr", () => Results.Created());
+
+app.MapGet("/student/{id}", (int id) =>
+{
+    var studentToReturn = StudentOps.GetStudentById(id);
+    if (studentToReturn == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(studentToReturn);
+}).WithName("studentGet").WithOpenApi();
+
+
+app.MapPost("students", (Student student) =>
+{
+    StudentOps.AddStudent(student);
+    return Results.Created();
+}).WithName("studentAdd").WithOpenApi();
+
+app.MapPut("/student", (Student student) =>
+{
+    return Results.Ok();
+}).WithName("studentPut").WithOpenApi();
 
 app.Run();
 

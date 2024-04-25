@@ -18,6 +18,12 @@
     {
         public static List<Student> students = new List<Student>();
 
+        internal static Student GetStudentById(int id)
+        {
+            var student = students.FirstOrDefault(s => s.Id == id);
+            return student;
+        }
+
         internal static void Init()
         {
             students.Add(new Student(1)
